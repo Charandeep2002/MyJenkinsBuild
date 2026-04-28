@@ -33,7 +33,7 @@ public class Application {
                 </style>
             </head>
             <body>
-                <h1>🚀 Spring Boot App</h1>
+                <h1>🚀 Spring Boot App is now Testing Build</h1>
                 <p>Your app is running successfully!</p>
             </body>
             </html>
