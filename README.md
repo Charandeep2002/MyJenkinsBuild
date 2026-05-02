@@ -26,11 +26,12 @@ This guide explains how to set up a complete build automation workflow using AWS
 
 
 4. Launch instance
+
+
 <img width="1917" height="922" alt="EC2 instance" src="https://github.com/user-attachments/assets/b0f148e6-cdab-4e3d-a121-f21a5392cd88" />
 
 
 ---
-
 # 🔐 2. Connect to EC2 via SSH
 
 From your local machine:
@@ -38,111 +39,9 @@ From your local machine:
 ```bash
 chmod 400 your-key.pem
 ssh -i your-key.pem ubuntu@<EC2-PUBLIC-IP>
-<img width="1468" height="751" alt="SSH-1" src="https://github.com/user-attachments/assets/909a3e21-8a3d-438e-a6b0-fdc5c0e88da4" />
-<img width="1471" height="747" alt="SSH-2" src="https://github.com/user-attachments/assets/663187e8-3758-4211-b903-4a43ec209296" />
 
-⚙️ 3. Update System
-sudo apt update && sudo apt upgrade -y
-☕ 4. Install Java 21 (JDK)
-sudo apt install openjdk-21-jdk -y
-
-Verify:
-
-java -version
-javac -version
-📦 5. Install Maven
-sudo apt install maven -y
-
-Verify:
-
-mvn -version
-<img width="1468" height="750" alt="applications install" src="https://github.com/user-attachments/assets/cef8eb1e-719c-41f1-8f93-d78d96492ff6" />
-
-🔧 6. Install Jenkins
-sudo apt install fontconfig openjdk-17-jre -y
-
-Add Jenkins key and repo:
-
-sudo wget -O /usr/share/keyrings/jenkins-keyring.asc \
-https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key
-
-echo deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc] \
-https://pkg.jenkins.io/debian-stable binary/ | sudo tee \
-/etc/apt/sources.list.d/jenkins.list > /dev/null
-
-Install Jenkins:
-
-sudo apt update
-sudo apt install jenkins -y
-
-Start Jenkins:
-
-sudo systemctl start jenkins
-sudo systemctl enable jenkins
-
-Check status:
-
-sudo systemctl status jenkins
-🌐 7. Access Jenkins
-
-<img width="1470" height="750" alt="Jenkins --version" src="https://github.com/user-attachments/assets/3db0cd67-5914-4892-aafa-55645b7d9960" />
+<img width="1468" height="751" alt="SSH-1" src="https://github.com/user-attachments/assets/9705de03-b150-40e6-8ba5-8f4ea97d42c6" />
+<img width="1471" height="747" alt="SSH-2" src="https://github.com/user-attachments/assets/c6b5d5fa-9d03-4b48-a7fa-8d2047417a9c" />
 
 
-Open browser:
 
-http://<EC2-PUBLIC-IP>:8080
-🔑 8. Unlock Jenkins
-<img width="1917" height="966" alt="image" src="https://github.com/user-attachments/assets/5c48ae74-da3c-4a58-883c-af1b87f975ba" />
-
-Get initial password:
-
-sudo cat /var/lib/jenkins/secrets/initialAdminPassword
-Paste password in browser
-Install suggested plugins
-Create admin user
-
-🔗 9. Connect Jenkins to GitHub (Private Repo)
-Option 1: Username + Personal Access Token (Recommended)
-Go to GitHub → Settings → Developer Settings → Personal Access Token
-Generate token (repo access)
-
-In Jenkins:
-
-Manage Jenkins → Credentials → Global → Add Credentials
-Kind: Username & Password
-Username: GitHub username
-Password: Personal Access Token
-🔄 10. Configure GitHub Webhook
-
-In GitHub repo:
-
-Settings → Webhooks → Add Webhook
-Payload URL:
-http://<EC2-PUBLIC-IP>:8080/github-webhook/
-Content type: application/json
-Events: Just push
-⚙️ 11. Create Jenkins Freestyle Project
-Go to Jenkins Dashboard
-Click "New Item"
-Name: jenkins-build
-Select: Freestyle Project
-🔧 12. Configure Jenkins Job
-Source Code Management:
-Select Git
-Repository URL:
-https://github.com/<your-username>/<repo-name>.git
-Credentials: Select saved GitHub credentials
-Build Triggers:
-Enable:
-✅ GitHub hook trigger for GITScm polling
-Build Step:
-Add → Execute Shell
-mvn clean install
-🚀 13. Run Build
-Click "Build Now"
-Check "Console Output"
-Ensure BUILD SUCCESS
-📦 14. Run Application
-java -jar target/demo-1.0.jar --server.port=9090
-🌐 15. Access Application
-http://<EC2-PUBLIC-IP>:9090
