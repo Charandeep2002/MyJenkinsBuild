@@ -230,7 +230,7 @@ java -jar target/demo-1.0.jar --server.port=9090
 http://<EC2-PUBLIC-IP>:9090
 
 ### 📸 Screenshot
-<img width="1468" height="750" alt="applications install" src="https://github.com/user-attachments/assets/95a4f685-8980-4ff0-9fce-cfde0a7788dd" />
+<img width="1918" height="906" alt="Final Outcome" src="https://github.com/user-attachments/assets/6338f0dc-b23a-414f-9a71-c7b66183d392" />
 
 ---
 
