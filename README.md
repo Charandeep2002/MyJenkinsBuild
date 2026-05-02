@@ -1,75 +1,67 @@
-📄 ✅ Complete README (Step-by-Step CI/CD using AWS + Jenkins + GitHub)
-# 🚀 End-to-End CI/CD Setup using AWS EC2, Jenkins & Spring Boot
+📄 ✅ README (Step-by-step + Image placeholders)
+# 🚀 CI/CD Setup using AWS EC2, Jenkins & Spring Boot
 
-This guide explains how to set up a complete build automation workflow using AWS EC2, Jenkins, Maven, and GitHub (private repo).
+This project demonstrates how to set up a basic CI/CD workflow using Jenkins Freestyle jobs to build and deploy a Spring Boot application on AWS EC2.
 
 ---
 
 # 📌 1. Launch AWS EC2 Instance
 
-1. Go to AWS Console → EC2 → Launch Instance
-2. Configure:
-   - Name: my-jenkins-server
-   - AMI: Ubuntu (22.04 LTS)
-   - Instance Type: t2.micro (Free Tier)
-   - Key Pair: Create or select existing
-   - Storage: Default (8GB)
+- Created an Ubuntu EC2 instance from AWS console
+- Configured instance type (t2.micro)
+- Created key pair for SSH access
 
-  
-
-3. Security Group → Add Inbound Rules:
-   - SSH → Port 22 → My IP
-   - HTTP → Port 80 → Anywhere
-   - Custom TCP → Port 8080 → Anywhere (Jenkins)
-   - Custom TCP → Port 9090 → Anywhere (Spring Boot App)
-<img width="1907" height="905" alt="SG" src="https://github.com/user-attachments/assets/37c0eeae-1a55-4c54-814d-fc671291a5c3" />
-
-
-4. Launch instance
-
-
-<img width="1917" height="922" alt="EC2 instance" src="https://github.com/user-attachments/assets/b0f148e6-cdab-4e3d-a121-f21a5392cd88" />
-
+## 📸 Screenshot
+![EC2 Instance](images/ec2-instance.png)
 
 ---
 
-# 🔐 2. Connect to EC2 via SSH
-From your local machine:
+# 🔐 2. Configure Security Group
+
+Added inbound rules:
+- Port 22 (SSH)
+- Port 8080 (Jenkins)
+- Port 9090 (Application)
+
+## 📸 Screenshot
+![Security Group](images/security-group.png)
+
+---
+
+# 🔑 3. Connect to EC2 via SSH
+
 ```bash
 chmod 400 your-key.pem
 ssh -i your-key.pem ubuntu@<EC2-PUBLIC-IP>
+📸 Screenshot
 
 
-# ⚙️ 3. Update System 
-
+⚙️ 4. Update System
 sudo apt update && sudo apt upgrade -y
-
-☕ 4. Install Java 21 (JDK)
+☕ 5. Install Java 21
 sudo apt install openjdk-21-jdk -y
 
 Verify:
 
 java -version
 javac -version
+📸 Screenshot
 
-# 📦 5. Install Maven
+📦 6. Install Maven
 sudo apt install maven -y
+
+Verify:
+
 mvn -version
+📸 Screenshot
 
-# 🔧 6. Install Jenkins
+🔧 7. Install Jenkins
 sudo apt install fontconfig openjdk-17-jre -y
-
-Add Jenkins key and repo:
-
 sudo wget -O /usr/share/keyrings/jenkins-keyring.asc \
 https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key
-
 echo deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc] \
 https://pkg.jenkins.io/debian-stable binary/ | sudo tee \
 /etc/apt/sources.list.d/jenkins.list > /dev/null
-
-Install Jenkins:
-
 sudo apt update
 sudo apt install jenkins -y
 
@@ -77,85 +69,53 @@ Start Jenkins:
 
 sudo systemctl start jenkins
 sudo systemctl enable jenkins
+📸 Screenshot
 
-Check status:
+🌐 8. Access Jenkins
 
-sudo systemctl status jenkins
-
-
-# 🌐 7. Access Jenkins
-
-Open browser:
+Open in browser:
 
 http://<EC2-PUBLIC-IP>:8080
+📸 Screenshot
 
-# 🔑 8. Unlock Jenkins
-
-Get initial password:
-
+🔑 9. Unlock Jenkins
 sudo cat /var/lib/jenkins/secrets/initialAdminPassword
-Paste password in browser
-Install suggested plugins
-Create admin user
+📸 Screenshot
 
+🔗 10. Connect Jenkins to GitHub (Private Repo)
+Generated GitHub Personal Access Token
+Added credentials in Jenkins
+📸 Screenshot
 
-# 🔗 9. Connect Jenkins to GitHub (Private Repo)
-Option 1: Username + Personal Access Token (Recommended)
-Go to GitHub → Settings → Developer Settings → Personal Access Token
-Generate token (repo access)
-
-In Jenkins:
-
-Manage Jenkins → Credentials → Global → Add Credentials
-Kind: Username & Password
-Username: GitHub username
-Password: Personal Access Token
-
-
-# 🔄 10. Configure GitHub Webhook
-
-In GitHub repo:
-
-Settings → Webhooks → Add Webhook
-Payload URL:
+🔄 11. Configure GitHub Webhook
+Added webhook in GitHub repository:
 http://<EC2-PUBLIC-IP>:8080/github-webhook/
-Content type: application/json
-Events: Just push
+📸 Screenshot
 
+⚙️ 12. Create Jenkins Freestyle Project
+Created new job: jenkins-build
+Selected Freestyle Project
+📸 Screenshot
 
-#⚙️ 11. Create Jenkins Freestyle Project
-Go to Jenkins Dashboard
-Click "New Item"
-Name: jenkins-build
-Select: Freestyle Project
-
-
-#🔧 12. Configure Jenkins Job
+🔧 13. Configure Jenkins Job
 Source Code Management:
-Select Git
-Repository URL:
-https://github.com/<your-username>/<repo-name>.git
-Credentials: Select saved GitHub credentials
-Build Triggers:
-Enable:
-✅ GitHub hook trigger for GITScm polling
+Added GitHub repository URL
+Selected credentials
+Build Trigger:
+Enabled GitHub webhook trigger
 Build Step:
-Add → Execute Shell
 mvn clean install
+📸 Screenshot
 
+🚀 14. Run Build
+Clicked "Build Now"
+Verified build success in console
+📸 Screenshot
 
-# 🚀 13. Run Build
-Click "Build Now"
-Check "Console Output"
-Ensure BUILD SUCCESS
-
-
-# 📦 14. Run Application
+📦 15. Run Application
 java -jar target/demo-1.0.jar --server.port=9090
+📸 Screenshot
 
-
-# 🌐 15. Access Application
+🌐 16. Access Application
 http://<EC2-PUBLIC-IP>:9090
-
-
-
+📸 Screenshot
